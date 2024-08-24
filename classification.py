@@ -1,4 +1,5 @@
-#using language model to do classification of a excel file, it provide thress columns, two are  text, the other is the label, the label is the class of the text. and the label have 5 classes.
+#using language model to do classification of a excel file, it provide three columns, two are text, 
+#the other is the label, the label is the class of the text. and the label have 5 classes.
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -9,14 +10,14 @@ from joblib import dump, load
 
 def train_model():
     # Load the Excel file
-    df = pd.read_excel('s.xlsx')
+    df = pd.read_excel('GL Journal Extraction Report_HK_For Asa.xlsx', sheet_name='data')
 
     # Assuming the columns are named 'text1', 'text2', and 'label'
-    X = df[['a', 'b']]
-    y = df['c']
+    X = df[['Supplier Name', 'Line Description']]
+    y = df['Spend categories (manual remapping)']
 
     # Combine the two text columns
-    X['combined_text'] = X['a'] + ' ' + X['b']
+    X['combined_text'] = X['Supplier Name'] + ' ' + X['Line Description']
 
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X['combined_text'], y, test_size=0.2, random_state=42)
@@ -37,14 +38,14 @@ def train_model():
   
 
     # Finally, save the pipeline:
-    dump(pipeline, 'j.joblib')
+    dump(pipeline, 'data.joblib')
 
     # Print the classification report
-    #print(classification_report(y_test, y_pred))
+    print(classification_report(y_test, y_pred))
     return pipeline
 
 def load_model():
-    return load('j.joblib') 
+    return load('data.joblib') 
 
 # Function to classify new text
 def classify_text(text1, text2):
@@ -89,3 +90,5 @@ def classify():
 
 if __name__ == '__main__':
     app.run(debug=True)
+ #   train_model()
+ #   test()
